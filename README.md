@@ -1,7 +1,7 @@
- # Restaurant
+# Restaurant
 
 ![.NET Core](https://github.com/iammukeshm/CleanArchitecture.WebApi/workflows/.NET%20Core/badge.svg?branch=master)
-![GitHub stars](https://img.shields.io/github/stars/iammukeshm/CleanArchitecture.WebApi)
+![GitHub stars](https://img.shields.io/github/stars/emmysteven/restaurant)
 [![Twitter Follow](https://img.shields.io/twitter/follow/emmysteven?style=social&label=follow)](https://twitter.com/emmysteven_)
 
 <br/>
