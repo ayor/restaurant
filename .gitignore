@@ -343,4 +343,5 @@ ASALocalRun/
 healthchecksdb
 
 WebUI/appsettings.json
+Infrastructure/Migrations/
 VSIXCore/
