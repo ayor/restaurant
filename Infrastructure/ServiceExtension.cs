@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Application.Interfaces;
 using Domain.Settings;
@@ -24,11 +23,12 @@ namespace Infrastructure
                 x.UseSqlServer(config.GetConnectionString("db")));
 
             var redis = ConnectionMultiplexer.ConnectAsync(config.GetConnectionString("RedisUrl")).Result;
-            services.AddTransient(x => redis.GetDatabase(15));
+            services.AddScoped(x => redis.GetDatabase());
 
             // services.AddTransient<ICacheService, CacheService>();
             
-            
+            services.AddHangfire(x => x.UseSqlServerStorage("db"));
+            services.AddHangfireServer();
 
             services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IShopRepository, ShopRepository>();

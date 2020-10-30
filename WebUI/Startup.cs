@@ -1,6 +1,5 @@
 using Application;
 using Infrastructure;
-using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,8 +24,6 @@ namespace WebUI
             services.AddInfrastructure(Configuration);
             services.AddApplication();
             services.AddControllers().AddNewtonsoftJson();
-            services.AddHealthChecks();
-            services.AddHealthChecks().AddDbContextCheck<DataContext>();
 
             services.AddRouting(options =>
             {
@@ -56,15 +53,11 @@ namespace WebUI
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health");
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
