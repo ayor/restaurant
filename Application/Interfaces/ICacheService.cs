@@ -1,9 +1,13 @@
+using System;
+using System.Threading.Tasks;
+
 namespace Application.Interfaces
 {
     public interface ICacheService
     {
-        bool TryGet<T>(string cacheKey, out T value);
-        T Set<T>(string cacheKey, T value);
-        void Remove(string cacheKey);
+        Task <string> GetAsync(string key);
+        Task SetAsync(string key, string value);
+        Task RefreshAsync(string key);
+        Task RemoveAsync(string key);
     }
 }

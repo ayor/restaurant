@@ -11,14 +11,11 @@ namespace Infrastructure.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly string _cacheKey = $"{typeof(T)}";
-        private readonly ICacheService _cacheService;
         private readonly DataContext _context;
 
         public BaseRepository(DataContext context)
         {
             _context = context;
-            // _cacheService = cacheService;
         }
 
         public async Task<T> GetByIdAsync(int id)

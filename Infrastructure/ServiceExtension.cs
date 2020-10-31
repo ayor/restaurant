@@ -25,9 +25,9 @@ namespace Infrastructure
             var redis = ConnectionMultiplexer.ConnectAsync(config.GetConnectionString("RedisUrl")).Result;
             services.AddScoped(x => redis.GetDatabase());
 
-            // services.AddTransient<ICacheService, CacheService>();
+            services.AddTransient<ICacheService, CacheService>();
             
-            services.AddHangfire(x => x.UseSqlServerStorage("db"));
+            services.AddHangfire(x => x.UseSqlServerStorage(config.GetConnectionString("db")));
             services.AddHangfireServer();
 
             services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
@@ -39,13 +39,10 @@ namespace Infrastructure
 
             services.Configure<JWTSettings>(config.GetSection("JWTSettings"));
             services.Configure<MailSettings>(config.GetSection("MailSettings"));
-            services.Configure<CacheSettings>(config.GetSection("CacheSettings"));
-            
+
             services.AddSingleton(x => x.GetRequiredService<IOptions<JWTSettings>>().Value);
             services.AddSingleton(x => x.GetRequiredService<IOptions<MailSettings>>().Value);
-            services.AddSingleton(x => x.GetRequiredService<IOptions<CacheSettings>>().Value);
             
-
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
