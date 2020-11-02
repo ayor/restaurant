@@ -2,48 +2,70 @@ using System;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Services
 {
     public class CacheService : ICacheService
     {
         private readonly IDistributedCache _distributedCache;
-        // private readonly DistributedCacheEntryOptions _option;
 
         public CacheService(IDistributedCache distributedCache)
         {
             _distributedCache = distributedCache;
-            // if (_option != null)
-            // {
-            //     _option = new DistributedCacheEntryOptions
-            //     {
-            //         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-            //     };
-            // }
         }
 
-        public async Task<string> GetAsync(string key)
+        // public async Task<string> GetAsync(string key)
+        // {
+        //     return await _distributedCache.GetStringAsync(key);
+        // }
+        //
+        // public async Task SetAsync(string key, string value)
+        // {
+        //     var option = new DistributedCacheEntryOptions
+        //     {
+        //         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
+        //     };    
+        //     await _distributedCache.SetStringAsync(key, value, option);
+        // }
+        //
+        // public async Task RefreshAsync(string key)
+        // {
+        //     await _distributedCache.RefreshAsync(key);
+        // }
+        //
+        // public async Task RemoveAsync(string key)
+        // {
+        //     await _distributedCache.RemoveAsync(key);
+        // }
+        
+        public async Task<object> GetAsync(string key)
         {
-            return await _distributedCache.GetStringAsync(key);
+            var cached = await _distributedCache.GetStringAsync(key);
+            if (cached != null)
+                return await Task.FromResult(JsonConvert.DeserializeObject(cached, 
+                    new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects }));
+
+            return await Task.FromResult<object>(null);
         }
 
-        public async Task SetAsync(string key, string value)
+        public async Task SetAsync(string key, object value, TimeSpan expirationTimeFromNow)
         {
-            var option = new DistributedCacheEntryOptions
+            var serializedResponse = JsonConvert.SerializeObject(value, 
+                new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects });
+
+            await _distributedCache.SetStringAsync(key, serializedResponse, new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
-            };    
-            await _distributedCache.SetStringAsync(key, value, option);
+                AbsoluteExpirationRelativeToNow = expirationTimeFromNow
+            });
         }
-
-        public async Task RefreshAsync(string key)
-        {
-            await _distributedCache.RefreshAsync(key);
-        }
-
+        
         public async Task RemoveAsync(string key)
         {
-            await _distributedCache.RemoveAsync(key);
+            if (key != null)
+            {
+                await _distributedCache.RemoveAsync(key);
+            }
         }
     }
 }

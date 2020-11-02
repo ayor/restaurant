@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from "../../shared/services/user.service";
 import {FormControl, FormGroup} from "@angular/forms";
+import {UserService} from "../../shared/services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -25,4 +25,5 @@ export class LoginComponent implements OnInit {
       // this.collection = result
     }, error => console.warn(error))
   }
+
 }

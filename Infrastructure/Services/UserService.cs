@@ -8,6 +8,7 @@ using Application.Common.Wrappers;
 using Application.DTOs.Account;
 using Application.DTOs.Email;
 using Application.Interfaces;
+using Application.Settings;
 using AutoMapper;
 using Domain.Common;
 using Domain.Entities;
@@ -22,7 +23,7 @@ namespace Infrastructure.Services
     {
         private readonly IEmailService _emailService;
         private readonly MailSettings _mailSettings;
-        private ICacheService _cacheService;
+        // private ICacheService _cacheService;
         private readonly JWTSettings _jwtSettings;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
@@ -32,15 +33,15 @@ namespace Infrastructure.Services
             IMapper mapper,
             JWTSettings jwtSettings,
             IEmailService emailService,
-            MailSettings mailSettings,
-            ICacheService cacheService)
+            MailSettings mailSettings
+            /*ICacheService cacheService*/)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtSettings = jwtSettings;
             _emailService = emailService;
             _mailSettings = mailSettings;
-            _cacheService = cacheService;
+            // _cacheService = cacheService;
         }
         
         public async Task<Response<string>> RegisterAsync(RegisterRequest request, string origin)

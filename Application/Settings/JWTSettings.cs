@@ -1,4 +1,4 @@
-namespace Domain.Settings
+namespace Application.Settings
 {
     public class JWTSettings
     {

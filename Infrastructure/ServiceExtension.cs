@@ -1,5 +1,6 @@
 using System.Text;
 using Application.Interfaces;
+using Application.Settings;
 using Domain.Settings;
 using Hangfire;
 using Infrastructure.Contexts;
@@ -25,7 +26,7 @@ namespace Infrastructure
             var redis = ConnectionMultiplexer.ConnectAsync(config.GetConnectionString("RedisUrl")).Result;
             services.AddScoped(x => redis.GetDatabase());
 
-            services.AddTransient<ICacheService, CacheService>();
+            // services.AddTransient<ICacheService, CacheService>();
             
             services.AddHangfire(x => x.UseSqlServerStorage(config.GetConnectionString("db")));
             services.AddHangfireServer();

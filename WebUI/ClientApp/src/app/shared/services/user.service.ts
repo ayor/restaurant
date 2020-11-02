@@ -6,7 +6,6 @@ import {HttpClient} from "@angular/common/http";
 })
 export class UserService {
   url = 'https://localhost:3000/api/user'
-
   constructor(private http: HttpClient) { }
 
   Get(){
@@ -20,4 +19,5 @@ export class UserService {
   Authenticate(data){
     return this.http.post(this.url + '/login', data)
   }
+
 }

@@ -5,9 +5,9 @@ namespace Application.Interfaces
 {
     public interface ICacheService
     {
-        Task <string> GetAsync(string key);
-        Task SetAsync(string key, string value);
-        Task RefreshAsync(string key);
-        Task RemoveAsync(string key);
+        public Task<object> GetAsync(string key);
+        public Task SetAsync(string key, object value, TimeSpan expirationTimeFromNow);
+        // public Task RefreshAsync(string key);
+        public Task RemoveAsync(string key);
     }
 }
