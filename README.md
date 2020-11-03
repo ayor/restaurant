@@ -64,10 +64,10 @@ Or, If you are feeling really generous, [Support the Project with a small contri
 - [x] Serilog
 - [ ] Swagger UI
 - [x] Response Wrappers
-- [ ] Healthchecks
+- [x] Healthchecks
 - [x] Pagination
 - [ ] In-Memory Caching
-- [ ] Redis Caching
+- [x] Redis Caching
 - [x] RDBMS
 - [x] JWT Authentication
 - [x] Role based Authorization
