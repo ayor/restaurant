@@ -7,7 +7,7 @@ namespace Application.Common.Attributes
     {
         public string CacheKey;
         public int Duration;
-        public TimeSpan TimeSpanForCacheInvalidation = TimeSpan.FromMilliseconds(60000);
+        public TimeSpan TimeSpanForCacheInvalidation = TimeSpan.FromSeconds(60);
 
         public CacheAttribute()
         {
@@ -21,14 +21,14 @@ namespace Application.Common.Attributes
         public CacheAttribute(int duration)
         {
             Duration = duration;
-            TimeSpanForCacheInvalidation = TimeSpan.FromMilliseconds(duration);
+            TimeSpanForCacheInvalidation = TimeSpan.FromSeconds(duration);
         }
 
         public CacheAttribute(string cacheKey, int duration)
         {
             CacheKey = cacheKey;
             Duration = duration;
-            TimeSpanForCacheInvalidation = TimeSpan.FromMilliseconds(duration);
+            TimeSpanForCacheInvalidation = TimeSpan.FromSeconds(duration);
         }
     }
 }

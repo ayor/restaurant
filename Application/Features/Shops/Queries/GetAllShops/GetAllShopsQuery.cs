@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.Features.Shops.Queries.GetAllShops
 {
-    [Cache(70000)]
+    [Cache]
     public class GetAllShopsQuery : IRequest<PagedResponse<IEnumerable<GetAllShopsVm>>>
     {
         public int PageNumber { get; set; }
