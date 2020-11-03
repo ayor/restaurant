@@ -1,5 +1,5 @@
 using System.Reflection;
-using Application.Common.Behaviors;
+using Application.Common.Behaviours;
 using Application.Settings;
 using AutoMapper;
 using MediatR;
@@ -16,7 +16,7 @@ namespace Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehaviour<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             
             services.AddTransient(typeof(IRequestPostProcessor<,>), typeof(CacheInvalidatorPostProcessor<,>));

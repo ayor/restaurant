@@ -1,6 +1,9 @@
 using System.Threading.Tasks;
-using Application.Features.Shops.Commands;
-using Application.Features.Shops.Queries;
+using Application.Features.Shops.Commands.CreateShop;
+using Application.Features.Shops.Commands.DeleteShop;
+using Application.Features.Shops.Commands.UpdateShop;
+using Application.Features.Shops.Queries.GetAllShops;
+using Application.Features.Shops.Queries.GetShopById;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
@@ -8,9 +11,13 @@ namespace WebUI.Controllers
     public class ShopController : BaseController
     {
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] GetAllShopsParameter filter)
         {
-            var query = await Mediator.Send(new GetAllShopQuery());
+            var query = await Mediator.Send(new GetAllShopsQuery
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            });
             return Ok(query);
         }
 

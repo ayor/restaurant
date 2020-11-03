@@ -8,13 +8,13 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            builder.HasKey(b => b.Id);
+            builder.HasKey(b => b.BookingId);
 
             builder.Property(b => b.UserId).IsRequired();
             builder.Property(b => b.ShopId).IsRequired();
 
             builder.Property(b => b.Created).ValueGeneratedOnAdd();
-            builder.Property(b => b.Updated).ValueGeneratedOnAddOrUpdate();
+            // builder.Property(b => b.Updated).ValueGeneratedOnAddOrUpdate();
         }
     }
 }

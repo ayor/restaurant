@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
@@ -15,30 +15,6 @@ namespace Infrastructure.Services
             _distributedCache = distributedCache;
         }
 
-        // public async Task<string> GetAsync(string key)
-        // {
-        //     return await _distributedCache.GetStringAsync(key);
-        // }
-        //
-        // public async Task SetAsync(string key, string value)
-        // {
-        //     var option = new DistributedCacheEntryOptions
-        //     {
-        //         AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
-        //     };    
-        //     await _distributedCache.SetStringAsync(key, value, option);
-        // }
-        //
-        // public async Task RefreshAsync(string key)
-        // {
-        //     await _distributedCache.RefreshAsync(key);
-        // }
-        //
-        // public async Task RemoveAsync(string key)
-        // {
-        //     await _distributedCache.RemoveAsync(key);
-        // }
-        
         public async Task<object> GetAsync(string key)
         {
             var cached = await _distributedCache.GetStringAsync(key);

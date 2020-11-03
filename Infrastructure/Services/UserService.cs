@@ -4,10 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.Common.Wrappers;
 using Application.DTOs.Account;
 using Application.DTOs.Email;
-using Application.Interfaces;
 using Application.Settings;
 using AutoMapper;
 using Domain.Common;
@@ -23,7 +23,6 @@ namespace Infrastructure.Services
     {
         private readonly IEmailService _emailService;
         private readonly MailSettings _mailSettings;
-        // private ICacheService _cacheService;
         private readonly JWTSettings _jwtSettings;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
@@ -33,15 +32,13 @@ namespace Infrastructure.Services
             IMapper mapper,
             JWTSettings jwtSettings,
             IEmailService emailService,
-            MailSettings mailSettings
-            /*ICacheService cacheService*/)
+            MailSettings mailSettings)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _jwtSettings = jwtSettings;
             _emailService = emailService;
             _mailSettings = mailSettings;
-            // _cacheService = cacheService;
         }
         
         public async Task<Response<string>> RegisterAsync(RegisterRequest request, string origin)
@@ -58,7 +55,7 @@ namespace Infrastructure.Services
 
             user.Role = isFirstAccount ? Roles.Admin : Roles.User;
             user.VerificationToken = RandomTokenString();
-            user.Created = DateTime.UtcNow;
+            // user.Created = DateTime.UtcNow;
             user.Password = BC.HashPassword(request.Password);
 
             await _userRepository.CreateAsync(user);
@@ -77,7 +74,7 @@ namespace Infrastructure.Services
 
             var response = new AuthResponse
             {
-                Id = user.Id,
+                Id = user.UserId,
                 Email = user.Email,
                 JWToken = GenerateJwt(request),
                 Role = user.Role,

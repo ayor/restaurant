@@ -1,3 +1,7 @@
+using System.Threading;
+using System.Threading.Tasks;
+using Application.Common.Interfaces;
+using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,13 +9,39 @@ namespace Infrastructure.Contexts
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        private readonly IDateService _date;
+        private readonly ICurrentUserService _currentUserService;
+        
+        public DataContext(DbContextOptions<DataContext> options,
+            ICurrentUserService currentUserService,
+            IDateService date) : base(options)
         {
+            _date = date;
+            _currentUserService = currentUserService;
         }
 
         public virtual DbSet<Shop> Shops { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Booking> Bookings { get; set; }
+        
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.Created = _date.NowUtc;
+                        entry.Entity.CreatedBy = "1"; //_currentUserService.UserId;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModified = _date.NowUtc;
+                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                        break;
+                }
+            }
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

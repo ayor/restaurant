@@ -1,5 +1,5 @@
 using System.Text;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using Application.Settings;
 using Domain.Settings;
 using Hangfire;
@@ -23,10 +23,15 @@ namespace Infrastructure
             services.AddDbContext<DataContext>(x => 
                 x.UseSqlServer(config.GetConnectionString("db")));
 
-            var redis = ConnectionMultiplexer.ConnectAsync(config.GetConnectionString("RedisUrl")).Result;
-            services.AddScoped(x => redis.GetDatabase());
+            // var redis = ConnectionMultiplexer.ConnectAsync(config.GetConnectionString("RedisUrl")).Result;
+            // services.AddScoped(x => redis.GetDatabase());
+            
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = config.GetConnectionString("RedisUrl");
+            });
 
-            // services.AddTransient<ICacheService, CacheService>();
+            services.AddTransient<ICacheService, CacheService>();
             
             services.AddHangfire(x => x.UseSqlServerStorage(config.GetConnectionString("db")));
             services.AddHangfireServer();
@@ -37,6 +42,7 @@ namespace Infrastructure
             
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IDateService, DateServiceService>();
 
             services.Configure<JWTSettings>(config.GetSection("JWTSettings"));
             services.Configure<MailSettings>(config.GetSection("MailSettings"));

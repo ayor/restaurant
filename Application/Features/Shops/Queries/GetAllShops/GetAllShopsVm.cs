@@ -1,16 +1,8 @@
-using System.Collections.Generic;
-using Domain.Common;
-
-namespace Domain.Entities
+namespace Application.Features.Shops.Queries.GetAllShops
 {
-    public class Shop : AuditableEntity
+    public class GetAllShopsVm
     {
-        public Shop()
-        {
-            Bookings = new HashSet<Booking>();
-        }
-        
-        public int ShopId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Website { get; set; }
         public string Email { get; set; }
@@ -18,6 +10,5 @@ namespace Domain.Entities
         public string State { get; set; }
         public string LocalGovernmentArea { get; set; }
         public string Address { get; set; }
-        public ICollection<Booking> Bookings { get; }
     }
 }

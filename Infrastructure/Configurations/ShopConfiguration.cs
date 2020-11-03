@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Shop> builder)
         {
-            builder.HasKey(s => s.Id);
+            builder.HasKey(s => s.ShopId);
 
             builder.Property(s => s.Name).HasMaxLength(50).IsRequired();
             builder.Property(s => s.Website).HasMaxLength(50);
@@ -20,7 +20,7 @@ namespace Infrastructure.Configurations
 
             builder.Property(s => s.Address).HasMaxLength(50).IsRequired();
             builder.Property(s => s.Created).ValueGeneratedOnAdd();
-            builder.Property(s => s.Updated).ValueGeneratedOnAddOrUpdate();
+            // builder.Property(s => s.Updated).ValueGeneratedOnAddOrUpdate();
 
             builder.HasIndex(s => new
             {

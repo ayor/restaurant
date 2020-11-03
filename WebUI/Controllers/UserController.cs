@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using Application.Common.Interfaces;
 using Application.DTOs.Account;
-using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

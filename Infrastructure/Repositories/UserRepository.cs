@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Application.Interfaces;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;

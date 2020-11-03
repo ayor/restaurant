@@ -1,5 +1,7 @@
 using Application.DTOs.Account;
-using Application.Features.Shops.Commands;
+using Application.Features.Shops.Commands.CreateShop;
+using Application.Features.Shops.Commands.UpdateShop;
+using Application.Features.Shops.Queries.GetAllShops;
 using AutoMapper;
 using Domain.Entities;
 
@@ -13,6 +15,9 @@ namespace Application.Mappings
             CreateMap<UpdateShopCommand, Shop>();
             
             CreateMap<RegisterRequest, User>();
+            
+            CreateMap<GetAllShopsQuery, GetAllShopsParameter>();
+            CreateMap<Shop, GetAllShopsVm>().ReverseMap();
         }
     }
 }
