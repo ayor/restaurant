@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using StackExchange.Redis;
 
 namespace Infrastructure
 {
@@ -23,9 +22,6 @@ namespace Infrastructure
             services.AddDbContext<DataContext>(x => 
                 x.UseSqlServer(config.GetConnectionString("db")));
 
-            // var redis = ConnectionMultiplexer.ConnectAsync(config.GetConnectionString("RedisUrl")).Result;
-            // services.AddScoped(x => redis.GetDatabase());
-            
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = config.GetConnectionString("RedisUrl");
