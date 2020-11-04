@@ -7,7 +7,7 @@ using Serilog;
 
 namespace WebUI
 {
-    public class Program
+    public class  Program
     {
         private static readonly string Env = Environment.GetEnvironmentVariable("Environment") ?? "prod";
 

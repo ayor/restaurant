@@ -4,13 +4,14 @@ using Application.Features.Shops.Commands.DeleteShop;
 using Application.Features.Shops.Commands.UpdateShop;
 using Application.Features.Shops.Queries.GetAllShops;
 using Application.Features.Shops.Queries.GetShopById;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
 {
     public class ShopController : BaseController
     {
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> Get([FromQuery] GetAllShopsParameter filter)
         {
             var query = await Mediator.Send(new GetAllShopsQuery

@@ -3,6 +3,7 @@ using Application.Common.Interfaces;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,15 +46,9 @@ namespace WebUI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.EnvironmentName == "dev") app.UseDeveloperExceptionPage();
 
             app.UseErrorHandler();
-
-            // global cors policy
-            app.UseCors(x => x
-                .WithOrigins("http://localhost:4200")
-                .AllowAnyMethod()
-                .AllowAnyHeader());
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -64,15 +59,16 @@ namespace WebUI
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment())
+                if (env.EnvironmentName == "dev")
                 {
-                    //spa.UseAngularCliServer(npmScript: "start");
+                    // spa.UseAngularCliServer(npmScript: "start");
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
