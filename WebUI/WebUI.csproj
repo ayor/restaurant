@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ClientApp\src\app\core" />
+      <Folder Include="ClientApp\src\app\core\models" />
     </ItemGroup>
 
 </Project>

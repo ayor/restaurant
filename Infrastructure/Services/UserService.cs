@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -138,9 +140,9 @@ namespace Infrastructure.Services
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtSecurityToken = new JwtSecurityToken(
-                _jwtSettings.Issuer,
-                _jwtSettings.Audience,
-                null,
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: new List<Claim>(),
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
                 signingCredentials: signingCredentials
             );
@@ -216,7 +218,7 @@ namespace Infrastructure.Services
 
             var emailRequest = new EmailRequest
             {
-                From = "hello@emmysteven.com",
+                From = _mailSettings.EmailFrom,
                 To = user.Email,
                 Subject = "Sign-up Verification API - Reset Password",
                 Body = $@"<h4>Reset Password Email</h4>
