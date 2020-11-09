@@ -1,15 +1,18 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class ModuleImportGuard implements CanActivate {
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+/**
+ * function used to throw an error if you try to import a module multiple times. This is the recommended way by Google.
+ * @param parentModule Tha parent module (reference to the module itself, for instance CoreModule)
+ * @param moduleName String that represents the module name that you want to load (for instance 'CoreModule')
+ */
+export function ModuleImportGuard(parentModule: any, moduleName: string) {
+  if (parentModule) {
+    throw new Error(`${moduleName} has already been loaded. Import Core modules in the AppModule only.`);
   }
-  
 }
+
+// export abstract class ModuleImportGuard {
+//     protected constructor(targetModule: any) {
+//         if (targetModule) {
+//             throw new Error(`${targetModule.constructor.name} has already been loaded.`);
+//         }
+//     }
+// }
