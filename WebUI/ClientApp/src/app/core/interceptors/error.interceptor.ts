@@ -5,14 +5,26 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
+import {Observable, throwError} from 'rxjs';
+import {AccountService} from "../services/account.service";
+import {catchError} from "rxjs/operators";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor() {}
+  constructor(private accountService: AccountService) {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    return next.handle(request);
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(catchError(err => {
+      if ([401, 403].includes(err.status) && this.accountService.userValue) {
+        // auto logout if 401 or 403 response returned from api
+        this.accountService.logout()
+      }
+
+      const error = err.error?.message || err.statusText;
+      console.error(err);
+      return throwError(error);
+    }))
   }
 }
