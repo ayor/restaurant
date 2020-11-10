@@ -1,11 +1,15 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Common.Wrappers;
 using Application.DTOs.Account;
+using Domain.Entities;
 
 namespace Application.Common.Interfaces
 {
     public interface IUserService
     {
+        Task<Response<AuthResponse>> GetByIdAsync(int id);
+        Task<IEnumerable<AuthResponse>> GetAllAsync();
         Task<Response<string>> RegisterAsync(RegisterRequest request, string origin);
         Task<Response<AuthResponse>> AuthenticateAsync(AuthRequest request, string ipAddress);
         Task<Response<string>> VerifyEmailAsync(string userId, string code);
