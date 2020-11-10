@@ -43,6 +43,25 @@ namespace Infrastructure.Services
             _mailSettings = mailSettings;
         }
         
+        private async Task<User> GetUser(int id)
+        {
+            var user = await _userRepository.FindAsync(x => x.UserId == id);
+            if (user == null) throw new KeyNotFoundException("Account not found");
+            return user;
+        }
+        
+        public async Task<IEnumerable<AuthResponse>> GetAllAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<AuthResponse>>(users);
+        }
+
+        public async Task<Response<AuthResponse>> GetByIdAsync(int id)
+        {
+            var user = await GetUser(id);
+            return _mapper.Map<Response<AuthResponse>>(user);
+        }
+
         public async Task<Response<string>> RegisterAsync(RegisterRequest request, string origin)
         {
             var isEmailUnique = await _userRepository.FindAsync(x => x.Email == request.Email);
