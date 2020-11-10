@@ -10,14 +10,14 @@ namespace Infrastructure.Contexts
     public class DataContext : DbContext
     {
         private readonly IDateService _date;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly ICurrentUserService _currentUser;
         
         public DataContext(DbContextOptions<DataContext> options,
-            ICurrentUserService currentUserService,
+            ICurrentUserService currentUser,
             IDateService date) : base(options)
         {
             _date = date;
-            _currentUserService = currentUserService;
+            _currentUser = currentUser;
         }
 
         public virtual DbSet<Shop> Shops { get; set; }
@@ -32,11 +32,11 @@ namespace Infrastructure.Contexts
                 {
                     case EntityState.Added:
                         entry.Entity.Created = _date.NowUtc;
-                        entry.Entity.CreatedBy = "1"; //_currentUserService.UserId;
+                        entry.Entity.CreatedBy = _currentUser.UserId;
                         break;
                     case EntityState.Modified:
                         entry.Entity.LastModified = _date.NowUtc;
-                        entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                        entry.Entity.LastModifiedBy = _currentUser.UserId;
                         break;
                 }
             }
