@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Settings;
 using Domain.Settings;
@@ -53,8 +54,25 @@ namespace Infrastructure
                 })
                 .AddJwtBearer(x =>
                 {
+                    x.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = context => 
+                        {
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                            var userId = int.Parse(context.Principal.Identity.Name);
+                            var user = userService.GetByIdAsync(userId);
+                            if (user == null)
+                            {
+                                // return unauthorized if user no longer exists
+                                context.Fail("Unauthorized");
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                    
                     x.RequireHttpsMetadata = false;
-                    x.SaveToken = false;
+                    x.SaveToken = true;
+                    // x.SaveToken = false;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
