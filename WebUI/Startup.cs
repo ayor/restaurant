@@ -5,10 +5,8 @@ using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using WebUI.Handlers;
 using WebUI.Services;
@@ -46,7 +44,9 @@ namespace WebUI
             });
 
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddHttpContextAccessor();
+            
             _services = services;
         }
 
