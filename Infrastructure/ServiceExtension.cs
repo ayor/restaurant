@@ -1,5 +1,5 @@
+using System;
 using System.Text;
-using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Settings;
 using Domain.Settings;
@@ -47,30 +47,14 @@ namespace Infrastructure
             services.AddSingleton(x => x.GetRequiredService<IOptions<JWTSettings>>().Value);
             services.AddSingleton(x => x.GetRequiredService<IOptions<MailSettings>>().Value);
             
-            services.AddAuthentication(x =>
+            services.AddAuthentication(x => 
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
                 .AddJwtBearer(x =>
                 {
-                    x.Events = new JwtBearerEvents
-                    {
-                        OnTokenValidated = context => 
-                        {
-                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                            var userId = int.Parse(context.Principal.Identity.Name);
-                            var user = userService.GetByIdAsync(userId);
-                            if (user == null)
-                            {
-                                // return unauthorized if user no longer exists
-                                context.Fail("Unauthorized");
-                            }
-                            return Task.CompletedTask;
-                        }
-                    };
-                    
-                    x.RequireHttpsMetadata = false;
+                    x.RequireHttpsMetadata = true;
                     x.SaveToken = true;
                     // x.SaveToken = false;
                     x.TokenValidationParameters = new TokenValidationParameters
@@ -79,10 +63,11 @@ namespace Infrastructure
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-
-                        ValidIssuer = "JWTSettings:Issuer",
-                        ValidAudience = "JWTSettings:Audience",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JWTSettings:Key"))
+                        
+                        ClockSkew = TimeSpan.Zero,
+                        ValidIssuer = config["JWTSettings:Issuer"],
+                        ValidAudience = config["JWTSettings:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWTSettings:Key"]))
                     };
                 });
         }
