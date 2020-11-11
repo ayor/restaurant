@@ -42,7 +42,8 @@ namespace WebUI
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
+            
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddHttpContextAccessor();
@@ -56,7 +57,7 @@ namespace WebUI
             if (env.EnvironmentName == "dev")
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
                 RegisteredServicesPage(app);
             }
 
