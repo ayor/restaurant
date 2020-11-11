@@ -34,7 +34,7 @@ namespace Application.Features.Shops.Commands.CreateShop
         {
             var vendor = _mapper.Map<Shop>(request);
             await _shopRepository.CreateAsync(vendor);
-            return new Response<int>(vendor.ShopId);
+            return new Response<int>(vendor.Id);
         }
     }
 }
