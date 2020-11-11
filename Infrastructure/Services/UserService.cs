@@ -16,6 +16,7 @@ using Domain.Common;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Settings;
+using Infrastructure.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using BC = BCrypt.Net.BCrypt;
 
@@ -43,9 +44,9 @@ namespace Infrastructure.Services
             _mailSettings = mailSettings;
         }
         
-        private async Task<User> GetUser(int id)
+        private async Task<User> GetUser(string id)
         {
-            var user = await _userRepository.FindAsync(x => x.UserId == id);
+            var user = await _userRepository.FindAsync(x => x.Id == id);
             if (user == null) throw new KeyNotFoundException("Account not found");
             return user;
         }
@@ -56,7 +57,7 @@ namespace Infrastructure.Services
             return _mapper.Map<IEnumerable<AuthResponse>>(users);
         }
 
-        public async Task<Response<AuthResponse>> GetByIdAsync(int id)
+        public async Task<Response<AuthResponse>> GetByIdAsync(string id)
         {
             var user = await GetUser(id);
             return _mapper.Map<Response<AuthResponse>>(user);
@@ -95,7 +96,7 @@ namespace Infrastructure.Services
 
             var response = new AuthResponse
             {
-                Id = user.UserId,
+                Id = user.Id,
                 Email = user.Email,
                 JWToken = GenerateJwt(request),
                 Role = user.Role,
@@ -155,13 +156,25 @@ namespace Infrastructure.Services
 
         private string GenerateJwt(AuthRequest request)
         {
+            var user = _userRepository.FindAsync(x => x.Email == request.Email);
+            string ipAddress = IpHelper.GetIpAddress();
+            
+            var claims = new[]
+            {
+                // new Claim(JwtRegisteredClaimNames.Sid, user.Id),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, request.Email),
+                // new Claim("uid", user.Id),
+                new Claim("ip", ipAddress)
+            };
+            
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
-                claims: new List<Claim>(),
+                claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
                 signingCredentials: signingCredentials
             );

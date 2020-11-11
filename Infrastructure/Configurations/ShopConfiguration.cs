@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Shop> builder)
         {
-            builder.HasKey(s => s.ShopId);
+            builder.HasKey(s => s.Id);
 
             builder.Property(s => s.Name).HasMaxLength(50).IsRequired();
             builder.Property(s => s.Website).HasMaxLength(50);
