@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Common.Wrappers;
 using Application.DTOs.Account;
-using Domain.Entities;
 
 namespace Application.Common.Interfaces
 {

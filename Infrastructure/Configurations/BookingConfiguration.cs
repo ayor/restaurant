@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
-            builder.HasKey(b => b.BookingId);
+            builder.HasKey(b => b.Id);
 
             builder.Property(b => b.UserId).IsRequired();
             builder.Property(b => b.ShopId).IsRequired();

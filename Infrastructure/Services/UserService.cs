@@ -44,7 +44,7 @@ namespace Infrastructure.Services
             _mailSettings = mailSettings;
         }
         
-        private async Task<User> GetUser(string id)
+        private async Task<User> GetUser(int id)
         {
             var user = await _userRepository.FindAsync(x => x.Id == id);
             if (user == null) throw new KeyNotFoundException("Account not found");
@@ -57,7 +57,7 @@ namespace Infrastructure.Services
             return _mapper.Map<IEnumerable<AuthResponse>>(users);
         }
 
-        public async Task<Response<AuthResponse>> GetByIdAsync(string id)
+        public async Task<Response<AuthResponse>> GetByIdAsync(int id)
         {
             var user = await GetUser(id);
             return _mapper.Map<Response<AuthResponse>>(user);
@@ -161,10 +161,13 @@ namespace Infrastructure.Services
             
             var claims = new[]
             {
-                // new Claim(JwtRegisteredClaimNames.Sid, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, _jwtSettings.Subject),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, request.Email),
-                // new Claim("uid", user.Id),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim("Id", user.Id.ToString()),
+                new Claim("FirstName", user.Result.FirstName),
+                new Claim("LastName", user.Result.LastName),
+                new Claim("Email", user.Result.Email),
                 new Claim("ip", ipAddress)
             };
             

@@ -11,10 +11,10 @@ namespace Domain.Entities
         {
             Shops = new HashSet<Shop>();
             Bookings = new HashSet<Booking>();
-            IsVerified = Verified.HasValue || PasswordReset.HasValue;
+            // IsVerified = Verified.HasValue || PasswordReset.HasValue;
         }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -29,7 +29,7 @@ namespace Domain.Entities
         public DateTime? ResetTokenExpires { get; set; }
         public List<RefreshToken> RefreshTokens { get; set; }
         public DateTime? Verified { get; set; }
-        public bool IsVerified { get; }
+        public bool IsVerified => Verified.HasValue || PasswordReset.HasValue;
         public ICollection<Shop> Shops { get; }
         public ICollection<Booking> Bookings { get; }
 
